@@ -46,16 +46,74 @@
     <h2>Executive Summary</h2>
   </hgroup>
   <article data-timings="">
-    <p>This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. </p>
+    <p>This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. The prediction is based on 10 years of data over a specific range of days. </p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="class" id="id" style="background:;">
+<slide class="" id="slide-2" style="background:;">
   <hgroup>
-    <h2>Inner workings</h2>
+    <h2>Inner workings -- Data Acquisition</h2>
   </hgroup>
+  <article data-timings="">
+    <p>Pull the weather data from the internet and format it. </p>
+
+<pre><code class="r">    #Get the data set from the URL 
+    mydataframe &lt;- read.fwf(
+      file = url(&quot;http://academic.udayton.edu/kissock/http/Weather/gsod95-current/WASEATTL.txt&quot;),
+      widths=c(1,2, 7,9, 6,10, 5,9))
+
+    #Create the report date by doing string concat. 
+    mydataframe$ReportDate &lt;- as.Date(
+      paste(as.character(mydataframe[,2]),as.character(mydataframe[,4]),as.character(mydataframe[,6]),sep = &quot;/&quot;)
+      , &quot;%m/%d/%Y&quot;)
+
+#Pick the two columns from the dataframe
+mydataframe &lt;- mydataframe[,c(8,9)]
+
+#Set the column names
+colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Inner workings -- Data Acquisition</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">    #User defined date parameter
+    mydateend &lt;- as.Date(&#39;2014-04-20&#39;)
+    mynumberofdays &lt;- 10
+
+    #Define the final data frame
+    myfinaldataframe &lt;- data.frame(ReportDate=as.Date(character()),Temp=numeric()) 
+
+    #Populate the final data frame
+    for(i in 1:10) {
+
+      tdate &lt;- as.POSIXlt(mydateend)
+      tdate$year &lt;- tdate$year - i
+
+      #Search for the dates 
+      tempdf &lt;- mydataframe[
+        mydataframe[,2] &gt; as.Date(tdate) - mynumberofdays &amp; 
+          mydataframe[,2] &lt; as.Date(tdate)
+        ,]
+
+      #Add the rows to the new data frame
+      myfinaldataframe &lt;- rbind(myfinaldataframe,tempdf)
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
   <article data-timings="">
     
   </article>
@@ -74,8 +132,20 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=2 title='Inner workings'>
+        data-slide=2 title='Inner workings -- Data Acquisition'>
          2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Inner workings -- Data Acquisition'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title=''>
+         4
       </a>
     </li>
   </ul>
