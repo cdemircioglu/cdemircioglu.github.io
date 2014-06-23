@@ -15,7 +15,12 @@ knit        : slidify::knit2slides
 ## Executive Summary
 
 
-This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. The prediction is based on 10 years of data over a specific range of days. 
+This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. The prediction is based on 10 years of data over a specific range of days.
+
+There are three stages: 
+1. Data acquisition
+2. Date range processing
+3. Prediction calculation
 
 
 --- 
@@ -51,12 +56,9 @@ At this stage, we calculate the date ranges, based on user input.
 ```{r}
     mydateend <- as.Date('2014-04-20')
     mynumberofdays <- 10
-    
     myfinaldataframe <- data.frame(ReportDate=as.Date(character()),Temp=numeric()) 
     
-    #Populate the final data frame
-    for(i in 1:10) {
-      
+    for(i in 1:10) {  
       tdate <- as.POSIXlt(mydateend)
       tdate$year <- tdate$year - i            
       tempdf <- mydataframe[ #Search for the dates 

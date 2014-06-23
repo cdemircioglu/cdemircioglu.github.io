@@ -51,12 +51,9 @@ At this stage, we calculate the date ranges, based on user input.
 ```r
     mydateend <- as.Date('2014-04-20')
     mynumberofdays <- 10
-    
     myfinaldataframe <- data.frame(ReportDate=as.Date(character()),Temp=numeric()) 
     
-    #Populate the final data frame
-    for(i in 1:10) {
-      
+    for(i in 1:10) {  
       tdate <- as.POSIXlt(mydateend)
       tdate$year <- tdate$year - i            
       tempdf <- mydataframe[ #Search for the dates 
