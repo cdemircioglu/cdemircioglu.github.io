@@ -82,10 +82,12 @@ colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
 
 <slide class="" id="slide-3" style="background:;">
   <hgroup>
-    <h2>Inner workings -- Data Acquisition</h2>
+    <h2>Inner workings -- Date Processing</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code class="r">    #User defined date parameter
+    <p>At this stage, we calculate the date ranges, based on user input. </p>
+
+<pre><code class="r">    #At Shiny these twp parameters are user defined
     mydateend &lt;- as.Date(&#39;2014-04-20&#39;)
     mynumberofdays &lt;- 10
 
@@ -114,8 +116,25 @@ colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
 </slide>
 
 <slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Inner workings -- Prediction</h2>
+  </hgroup>
   <article data-timings="">
-    
+    <p>At this stage, we predict the temparature. </p>
+
+<pre><code class="r">#Create the linear regression model
+    fit &lt;- lm(Temp ~ ReportDate,myfinaldataframe)
+
+    #Set the predicted temp
+    predicted &lt;- predict(fit, data.frame(ReportDate = c(mydateend)))
+
+    format(round(predicted, 2), nsmall = 2)
+</code></pre>
+
+<pre><code>##       1 
+## &quot;47.35&quot;
+</code></pre>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -138,13 +157,13 @@ colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=3 title='Inner workings -- Data Acquisition'>
+        data-slide=3 title='Inner workings -- Date Processing'>
          3
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=4 title=''>
+        data-slide=4 title='Inner workings -- Prediction'>
          4
       </a>
     </li>

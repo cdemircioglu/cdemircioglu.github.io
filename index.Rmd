@@ -45,10 +45,11 @@ colnames(mydataframe) <- c("Temp","ReportDate")
 
 --- 
 
-## Inner workings -- Data Acquisition
+## Inner workings -- Date Processing
 
+At this stage, we calculate the date ranges, based on user input. 
 ```{r}
-    #User defined date parameter
+    #At Shiny these twp parameters are user defined
     mydateend <- as.Date('2014-04-20')
     mynumberofdays <- 10
     
@@ -74,3 +75,16 @@ colnames(mydataframe) <- c("Temp","ReportDate")
 ```
 
 --- 
+
+## Inner workings -- Prediction 
+
+At this stage, we predict the temparature. 
+```{r}
+#Create the linear regression model
+    fit <- lm(Temp ~ ReportDate,myfinaldataframe)
+    
+    #Set the predicted temp
+    predicted <- predict(fit, data.frame(ReportDate = c(mydateend)))
+    
+    format(round(predicted, 2), nsmall = 2)
+```
