@@ -15,7 +15,13 @@ knit        : slidify::knit2slides
 ## Executive Summary
 
 
-This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. The prediction is based on 10 years of data over a specific range of days. 
+This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. The prediction is based on 10 years of data over a specific range of days.
+<br>
+<br>
+There are three stages: <br>
+1. Data acquisition<br>
+2. Date range processing<br>
+3. Prediction calculation<br>
 
 
 --- 
@@ -35,11 +41,11 @@ Pull the weather data from the internet and format it.
       paste(as.character(mydataframe[,2]),as.character(mydataframe[,4]),as.character(mydataframe[,6]),sep = "/")
       , "%m/%d/%Y")
 
-#Pick the two columns from the dataframe
-mydataframe <- mydataframe[,c(8,9)]
+  #Pick the two columns from the dataframe
+  mydataframe <- mydataframe[,c(8,9)]
     
-#Set the column names
-colnames(mydataframe) <- c("Temp","ReportDate")
+  #Set the column names
+  colnames(mydataframe) <- c("Temp","ReportDate")
 ```
 
 --- 
@@ -49,7 +55,7 @@ colnames(mydataframe) <- c("Temp","ReportDate")
 At this stage, we calculate the date ranges, based on user input. 
 
 ```r
-    mydateend <- as.Date('2014-04-20')
+    mydateend <- as.Date('2014-04-20') #At Shiny, there variables are user defined. 
     mynumberofdays <- 10
     myfinaldataframe <- data.frame(ReportDate=as.Date(character()),Temp=numeric()) 
     
@@ -73,7 +79,7 @@ At this stage, we calculate the date ranges, based on user input.
 At this final stage, we predict the temparature. 
 
 ```r
-#Create the linear regression model
+    #Create the linear regression model
     fit <- lm(Temp ~ ReportDate,myfinaldataframe)
     
     #Set the predicted temp

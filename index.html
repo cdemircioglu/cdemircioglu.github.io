@@ -46,7 +46,13 @@
     <h2>Executive Summary</h2>
   </hgroup>
   <article data-timings="">
-    <p>This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. The prediction is based on 10 years of data over a specific range of days. </p>
+    <p>This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. The prediction is based on 10 years of data over a specific range of days.
+<br>
+<br>
+There are three stages: <br>
+1. Data acquisition<br>
+2. Date range processing<br>
+3. Prediction calculation<br></p>
 
   </article>
   <!-- Presenter Notes -->
@@ -69,11 +75,11 @@
       paste(as.character(mydataframe[,2]),as.character(mydataframe[,4]),as.character(mydataframe[,6]),sep = &quot;/&quot;)
       , &quot;%m/%d/%Y&quot;)
 
-#Pick the two columns from the dataframe
-mydataframe &lt;- mydataframe[,c(8,9)]
+  #Pick the two columns from the dataframe
+  mydataframe &lt;- mydataframe[,c(8,9)]
 
-#Set the column names
-colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
+  #Set the column names
+  colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
 </code></pre>
 
   </article>
@@ -87,7 +93,7 @@ colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
   <article data-timings="">
     <p>At this stage, we calculate the date ranges, based on user input. </p>
 
-<pre><code class="r">    mydateend &lt;- as.Date(&#39;2014-04-20&#39;)
+<pre><code class="r">    mydateend &lt;- as.Date(&#39;2014-04-20&#39;) #At Shiny, there variables are user defined. 
     mynumberofdays &lt;- 10
     myfinaldataframe &lt;- data.frame(ReportDate=as.Date(character()),Temp=numeric()) 
 
@@ -115,7 +121,7 @@ colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
   <article data-timings="">
     <p>At this final stage, we predict the temparature. </p>
 
-<pre><code class="r">#Create the linear regression model
+<pre><code class="r">    #Create the linear regression model
     fit &lt;- lm(Temp ~ ReportDate,myfinaldataframe)
 
     #Set the predicted temp
