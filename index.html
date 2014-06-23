@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather Man</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Weather Man">
+  <meta name="author" content="Cem Demircioglu">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Weather Man</h1>
+    <h2>How the Weather Man works behind the scenes?</h2>
+    <p>Cem Demircioglu<br/>Consultant</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Executive Summary</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>This presentation is about the Weather Man application that was designed by Cem Demircioglu. The application predicts the temperature of a selected date. The prediction is based on 10 years of data over a specific range of days.
+<br>
+<br>
+There are three stages: <br>
+1. Data acquisition<br>
+2. Date range processing<br>
+3. Prediction calculation<br></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Inner workings -- Data Acquisition</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Pull the weather data from the internet and format it. </p>
+
+<pre><code class="r">    #Get the data set from the URL 
+    mydataframe &lt;- read.fwf(
+      file = url(&quot;http://academic.udayton.edu/kissock/http/Weather/gsod95-current/WASEATTL.txt&quot;),
+      widths=c(1,2, 7,9, 6,10, 5,9))
+
+    #Create the report date by doing string concat. 
+    mydataframe$ReportDate &lt;- as.Date(
+      paste(as.character(mydataframe[,2]),as.character(mydataframe[,4]),as.character(mydataframe[,6]),sep = &quot;/&quot;)
+      , &quot;%m/%d/%Y&quot;)
+
+  #Pick the two columns from the dataframe
+  mydataframe &lt;- mydataframe[,c(8,9)]
+
+  #Set the column names
+  colnames(mydataframe) &lt;- c(&quot;Temp&quot;,&quot;ReportDate&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Inner workings -- Date Processing</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>At this stage, we calculate the date ranges, based on user input. </p>
+
+<pre><code class="r">    mydateend &lt;- as.Date(&#39;2014-04-20&#39;) #At Shiny, there variables are user defined. 
+    mynumberofdays &lt;- 10
+    myfinaldataframe &lt;- data.frame(ReportDate=as.Date(character()),Temp=numeric()) 
+
+    for(i in 1:10) {  
+      tdate &lt;- as.POSIXlt(mydateend)
+      tdate$year &lt;- tdate$year - i            
+      tempdf &lt;- mydataframe[ #Search for the dates 
+        mydataframe[,2] &gt; as.Date(tdate) - mynumberofdays &amp; 
+          mydataframe[,2] &lt; as.Date(tdate)
+        ,]
+
+      #Add the rows to the new data frame
+      myfinaldataframe &lt;- rbind(myfinaldataframe,tempdf)
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Inner workings -- Prediction</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>At this final stage, we predict the temparature. </p>
+
+<pre><code class="r">    #Create the linear regression model
+    fit &lt;- lm(Temp ~ ReportDate,myfinaldataframe)
+
+    #Set the predicted temp
+    predicted &lt;- predict(fit, data.frame(ReportDate = c(mydateend)))
+
+    format(round(predicted, 2), nsmall = 2)
+</code></pre>
+
+<pre><code>##       1 
+## &quot;47.35&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Executive Summary'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Inner workings -- Data Acquisition'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Inner workings -- Date Processing'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Inner workings -- Prediction'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
