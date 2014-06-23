@@ -49,21 +49,17 @@ colnames(mydataframe) <- c("Temp","ReportDate")
 At this stage, we calculate the date ranges, based on user input. 
 
 ```r
-    #At Shiny these twp parameters are user defined
     mydateend <- as.Date('2014-04-20')
     mynumberofdays <- 10
     
-    #Define the final data frame
     myfinaldataframe <- data.frame(ReportDate=as.Date(character()),Temp=numeric()) 
     
     #Populate the final data frame
     for(i in 1:10) {
       
       tdate <- as.POSIXlt(mydateend)
-      tdate$year <- tdate$year - i
-      
-      #Search for the dates 
-      tempdf <- mydataframe[
+      tdate$year <- tdate$year - i            
+      tempdf <- mydataframe[ #Search for the dates 
         mydataframe[,2] > as.Date(tdate) - mynumberofdays & 
           mydataframe[,2] < as.Date(tdate)
         ,]
@@ -77,7 +73,7 @@ At this stage, we calculate the date ranges, based on user input.
 
 ## Inner workings -- Prediction 
 
-At this stage, we predict the temparature. 
+At this final stage, we predict the temparature. 
 
 ```r
 #Create the linear regression model
